@@ -36,103 +36,79 @@ static void storeu(void* Ptr, T const V)
 
 #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
 template <class T>
-static T loadu_le(const void* Ptr)
+static T bswap_le(T const v)
 {
-  return loadu<T>(Ptr);
+  return v;
 }
 
 template <class T>
-static T loadu_be(const void* Ptr)
+static T bswap_be(T const v)
 {
-  return bswap(loadu<T>(Ptr));
-}
-
-template <class T>
-static void storeu_le(void* Ptr, T const V)
-{
-  storeu(Ptr, V);
-}
-
-template <class T>
-static void storeu_be(void* Ptr, T const V)
-{
-  storeu(Ptr, bswap(V));
-}
-
-template <class T>
-static T load_le(const T* Ptr)
-{
-  return *Ptr;
-}
-
-template <class T>
-static T load_be(const T* Ptr)
-{
-  return bswap(*Ptr);
-}
-
-template <class T>
-static void store_le(T* Ptr, T const V)
-{
-  *Ptr = V;
-}
-
-template <class T>
-static void store_be(T* Ptr, T const V)
-{
-  *Ptr = bswap(V);
+  return bswap(v);
 }
 #elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
 template <class T>
-static T loadu_le(const void* Ptr)
+static T bswap_le(T const v)
 {
-  return bswap(loadu<T>(Ptr));
+  return bswap(v);
 }
 
 template <class T>
-static T loadu_be(const void* Ptr)
+static T bswap_be(T const v)
 {
-  return loadu<T>(Ptr);
-}
-
-template <class T>
-static void storeu_le(void* Ptr, T const V)
-{
-  storeu(Ptr, bswap(V));
-}
-
-template <class T>
-static void storeu_be(void* Ptr, T const V)
-{
-  storeu(Ptr, V);
-}
-
-template <class T>
-static T load_le(const T* Ptr)
-{
-  return bswap(*Ptr);
-}
-
-template <class T>
-static T load_be(const T* Ptr)
-{
-  return *Ptr;
-}
-
-template <class T>
-static void store_le(T* Ptr, T const V)
-{
-  *Ptr = bswap(V);
-}
-
-template <class T>
-static void store_be(T* Ptr, T const V)
-{
-  *Ptr = V;
+  return v;
 }
 #else
 #error Unsupported endianess!
 #endif
+
+template <class T>
+static T loadu_le(const void* Ptr)
+{
+  return bswap_le(loadu<T>(Ptr));
+}
+
+template <class T>
+static T loadu_be(const void* Ptr)
+{
+  return bswap_be(loadu<T>(Ptr));
+}
+
+template <class T>
+static void storeu_le(void* Ptr, T const V)
+{
+  storeu(Ptr, bswap_le(V));
+}
+
+template <class T>
+static void storeu_be(void* Ptr, T const V)
+{
+  storeu(Ptr, bswap_be(V));
+}
+
+template <class T>
+static T load_le(const T* Ptr)
+{
+  return bswap_le(*Ptr);
+}
+
+template <class T>
+static T load_be(const T* Ptr)
+{
+  return bswap_be(*Ptr);
+}
+
+template <class T>
+static void store_le(T* Ptr, T const V)
+{
+  *Ptr = bswap_le(V);
+}
+
+template <class T>
+static void store_be(T* Ptr, T const V)
+{
+  *Ptr = bswap_be(V);
+}
 
 } // intmem 
 
