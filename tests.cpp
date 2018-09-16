@@ -3,11 +3,17 @@
 
 using namespace intmem;
 
+#ifdef _MSC_VER
+#define ALIGN(n) __declspec(align(n))
+#else
+#define ALIGN(n) __attribute__((aligned(n)))
+#endif
+
 template <class T>
 int test_unsigned(const char* Name)
 {
-  __attribute__((aligned(alignof(T)))) uint8_t cst_4_le[sizeof(T)] = {0};
-  __attribute__((aligned(alignof(T)))) uint8_t cst_4_be[sizeof(T)] = {0};
+  ALIGN(alignof(T)) uint8_t cst_4_le[sizeof(T)] = {0};
+  ALIGN(alignof(T)) uint8_t cst_4_be[sizeof(T)] = {0};
   cst_4_le[0] = 4;
   cst_4_be[sizeof(T)-1] = 4;
   if (loadu_le<T>(cst_4_le) != 4) {
@@ -27,7 +33,7 @@ int test_unsigned(const char* Name)
     return 1;
   }
 
-  __attribute__((aligned(alignof(T)))) uint8_t tmp[sizeof(T)];
+  ALIGN(alignof(T)) uint8_t tmp[sizeof(T)];
   storeu_le<T>(tmp, 4);
   if (memcmp(tmp, cst_4_le, sizeof(T)) != 0) {
     std::cerr << Name << ": error storing LE integer!" << std::endl;
@@ -56,8 +62,8 @@ int test_unsigned(const char* Name)
 template <class T>
 int test_signed(const char* Name)
 {
-  __attribute__((aligned(alignof(T)))) uint8_t cst_minus10_le[sizeof(T)];
-  __attribute__((aligned(alignof(T)))) uint8_t cst_minus10_be[sizeof(T)];
+  ALIGN(alignof(T)) uint8_t cst_minus10_le[sizeof(T)];
+  ALIGN(alignof(T)) uint8_t cst_minus10_be[sizeof(T)];
   memset(&cst_minus10_le[0], 0xFF, sizeof(T));
   memset(&cst_minus10_be[0], 0xFF, sizeof(T));
   cst_minus10_le[0] = 0xF6;

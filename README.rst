@@ -4,8 +4,10 @@ intmem
 This is a small header-only C++11 library that helps loading unaligned
 integers from memory, in natural/little/big endian.
 
-It has been tested with GCC 8.2 and Clang 6.0 under Linux/x32, Linux/x64 and
-Linux/mipsbe (using QEMU).
+It has been tested under the following platforms: 
+
+* GCC 8.2 and Clang 6.0 under Linux/x32, Linux/x64 and Linux/mipsbe (using QEMU).
+* Windows x32 and x64 using Visual Studio 2015
 
 Tests
 -----
