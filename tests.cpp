@@ -111,6 +111,28 @@ int test_signed(const char* Name)
   return 0;
 }
 
+#ifdef INTMEM_CPP20_SUPPORT
+namespace {
+constexpr uint8_t buf[] = {1,2,4,5,6,7,8,9};
+static_assert(intmem::loadu_le<uint8_t>(buf) == 1U);
+static_assert(intmem::loadu_be<uint8_t>(buf) == 1U);
+static_assert(intmem::loadu_le<uint16_t>(buf) == 0x0201U);
+static_assert(intmem::loadu_be<uint16_t>(buf) == 0x0102U);
+static_assert(intmem::loadu_le<uint32_t>(buf) == 0x05040201U);
+static_assert(intmem::loadu_be<uint32_t>(buf) == 0x01020405U);
+static_assert(intmem::loadu_le<uint64_t>(buf) == 0x0908070605040201ULL);
+static_assert(intmem::loadu_be<uint64_t>(buf) == 0x0102040506070809ULL);
+static_assert(intmem::bswap<uint8_t>(1U) == 1U);
+static_assert(intmem::bswap<uint16_t>(0x0102U) == 0x0201U);
+static_assert(intmem::bswap<uint32_t>(0x01020405U) == 0x05040201U);
+static_assert(intmem::bswap<uint64_t>(0x0102040506070809ULL) == 0x0908070605040201ULL);
+static_assert(intmem::bswap((int8_t)1) == 1U);
+static_assert(intmem::bswap((int16_t)0x0102) == 0x0201);
+static_assert(intmem::bswap((int32_t)0x01020405) == 0x05040201);
+static_assert(intmem::bswap((int64_t)0x0102040506070809LL) == 0x0908070605040201LL);
+}
+#endif
+
 int main()
 {
   int Ret = 0;
